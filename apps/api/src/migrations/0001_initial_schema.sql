@@ -15,6 +15,7 @@
 -- =============================================================================
 
 CREATE EXTENSION IF NOT EXISTS "pg_trgm"; -- for username search
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- =============================================================================
 -- ENUMS
@@ -589,3 +590,327 @@ CREATE TABLE user_achievements (
 CREATE UNIQUE INDEX idx_user_achievements_unique ON user_achievements (user_id, achievement_key, COALESCE(streamer_id, '00000000-0000-0000-0000-000000000000'::UUID));
 CREATE INDEX idx_user_achievements_user ON user_achievements(user_id, status);
 CREATE INDEX idx_user_achievements_claimable ON user_achievements(user_id) WHERE status = 'claimable';
+
+
+
+
+-- =============================================================================
+-- TWITCH WATCH SESSIONS
+-- Tracks active watch sessions for mana grant calculation.
+-- A session starts when the user loads the streamer page while stream is live.
+-- Heartbeats arrive every 5 minutes from the frontend.
+-- Session ends when heartbeat stops arriving (timeout: 8 minutes).
+-- =============================================================================
+
+CREATE TABLE watch_sessions (
+  id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id         UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  streamer_id     UUID NOT NULL REFERENCES streamers(id) ON DELETE CASCADE,
+  membership_id   UUID NOT NULL REFERENCES user_streamer_memberships(id),
+
+  started_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  ended_at        TIMESTAMPTZ,               -- null = session still active or not yet closed
+  last_heartbeat  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  -- Source of the session
+  source          TEXT NOT NULL DEFAULT 'web',
+  -- 'web' = MassDX page, 'extension' = Twitch Extension panel
+  -- 'twitch_direct' = user is on twitch.tv (reported via extension)
+
+  -- Mana granted this session
+  heartbeat_count INTEGER NOT NULL DEFAULT 0,   -- each heartbeat = one 5-min window
+  mana_granted    BIGINT NOT NULL DEFAULT 0,
+  xp_granted      INTEGER NOT NULL DEFAULT 0,
+
+  -- Bonus multiplier (e.g. 1.1 if watching on Twitch directly)
+  mana_multiplier NUMERIC(4,2) NOT NULL DEFAULT 1.00
+);
+
+CREATE INDEX idx_watch_sessions_active ON watch_sessions(user_id, streamer_id)
+  WHERE ended_at IS NULL;
+CREATE INDEX idx_watch_sessions_heartbeat ON watch_sessions(last_heartbeat)
+  WHERE ended_at IS NULL;
+-- Background job queries this index to find stale sessions (last_heartbeat > 8 min ago)
+-- and closes them.
+
+-- =============================================================================
+-- CHAT METRIC SNAPSHOTS
+-- The chatbot reports per-user message counts in 5-minute windows.
+-- We store these for mana grants and analytics.
+-- =============================================================================
+
+CREATE TABLE chat_metric_snapshots (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  streamer_id     UUID NOT NULL REFERENCES streamers(id) ON DELETE CASCADE,
+
+  -- Can be null if message came from a non-linked user
+  user_id         UUID REFERENCES users(id),
+  twitch_username TEXT NOT NULL,
+
+  window_start    TIMESTAMPTZ NOT NULL,
+  window_end      TIMESTAMPTZ NOT NULL,
+  message_count   INTEGER NOT NULL DEFAULT 0,
+
+  -- Mana granted for this window (0 if user not linked or below threshold)
+  mana_granted    BIGINT NOT NULL DEFAULT 0,
+  threshold_met   BOOLEAN NOT NULL DEFAULT FALSE,
+  -- threshold: 5+ messages in window = active chatter = mana grant
+
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_chat_metrics_streamer ON chat_metric_snapshots(streamer_id, window_start DESC);
+CREATE INDEX idx_chat_metrics_user ON chat_metric_snapshots(user_id, window_start DESC)
+  WHERE user_id IS NOT NULL;
+
+-- =============================================================================
+-- ONCHAIN EVENTS
+-- Mirror of all blockchain events relevant to MassDX.
+-- Populated by the Alchemy webhook handler.
+-- =============================================================================
+
+CREATE TABLE onchain_events (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+  event_type      onchain_event_type NOT NULL,
+  chain_id        INTEGER NOT NULL DEFAULT 11155111,  -- 11155111 = Sepolia testnet
+  contract_address TEXT NOT NULL,
+  tx_hash         TEXT NOT NULL,
+  block_number    BIGINT NOT NULL,
+  log_index       INTEGER NOT NULL,
+
+  -- Decoded event data
+  payload         JSONB NOT NULL,
+
+  -- Processing status
+  processed       BOOLEAN NOT NULL DEFAULT FALSE,
+  processed_at    TIMESTAMPTZ,
+  processing_error TEXT,
+
+  -- Alchemy metadata
+  alchemy_webhook_id TEXT,
+  received_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  UNIQUE(tx_hash, log_index)
+);
+
+CREATE INDEX idx_onchain_unprocessed ON onchain_events(processed, received_at)
+  WHERE processed = FALSE;
+CREATE INDEX idx_onchain_type ON onchain_events(event_type, received_at DESC);
+
+-- =============================================================================
+-- WEBHOOK LOG
+-- Raw log of every incoming webhook from every external service.
+-- =============================================================================
+
+CREATE TABLE webhook_log (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  source          webhook_source NOT NULL,
+  event_type      TEXT NOT NULL,
+  raw_payload     JSONB NOT NULL,
+  signature_valid BOOLEAN NOT NULL,
+  processed       BOOLEAN NOT NULL DEFAULT FALSE,
+  processing_error TEXT,
+  received_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_webhook_log_source ON webhook_log(source, received_at DESC);
+CREATE INDEX idx_webhook_log_unprocessed ON webhook_log(processed, received_at)
+  WHERE processed = FALSE;
+
+  -- =============================================================================
+-- STRIPE PAYMENTS
+-- =============================================================================
+
+CREATE TABLE stripe_payments (
+  id                       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id                  UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  stripe_payment_intent_id TEXT UNIQUE NOT NULL,
+  stripe_customer_id       TEXT,
+  amount_cents             INTEGER NOT NULL,
+  currency                 TEXT NOT NULL DEFAULT 'usd',
+  status                   TEXT NOT NULL,
+  credits_granted_cents    INTEGER,
+  credits_granted_at       TIMESTAMPTZ,
+  metadata                 JSONB,
+  created_at               TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at               TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_stripe_payments_user ON stripe_payments(user_id, created_at DESC);
+CREATE INDEX idx_stripe_payments_intent ON stripe_payments(stripe_payment_intent_id);
+
+-- =============================================================================
+-- ACTIVITY FEED EVENTS
+-- =============================================================================
+
+CREATE TABLE activity_feed_events (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  streamer_id     UUID NOT NULL REFERENCES streamers(id) ON DELETE CASCADE,
+  user_id         UUID REFERENCES users(id),
+  display_name    TEXT NOT NULL,
+  is_anonymous    BOOLEAN NOT NULL DEFAULT FALSE,
+  event_type      TEXT NOT NULL,
+  subject_name    TEXT,
+  subject_rarity  asset_rarity,
+  subject_emoji   TEXT,
+  detail_text     TEXT,
+  asset_id        UUID REFERENCES assets(id),
+  user_asset_id   UUID REFERENCES user_assets(id),
+  activation_id   UUID REFERENCES asset_activations(id),
+  occurred_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- This index handles "latest events for streamer" perfectly without the partial index
+CREATE INDEX idx_activity_feed_streamer ON activity_feed_events(streamer_id, occurred_at DESC);
+
+-- =============================================================================
+-- CRE WORKFLOW EXECUTIONS
+-- =============================================================================
+
+CREATE TABLE cre_workflow_executions (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  streamer_id         UUID NOT NULL REFERENCES streamers(id) ON DELETE CASCADE,
+  workflow_id         TEXT NOT NULL,
+  milestone_key       TEXT NOT NULL,
+  milestone_value     INTEGER NOT NULL,
+  api_response        JSONB,
+  verified_value      INTEGER,
+  tx_hash             TEXT,
+  block_number        BIGINT,
+  loot_drop_triggered BOOLEAN NOT NULL DEFAULT FALSE,
+  loot_drop_count     INTEGER,
+  status              TEXT NOT NULL DEFAULT 'pending',
+  error_message       TEXT,
+  initiated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  confirmed_at        TIMESTAMPTZ
+);
+
+CREATE INDEX idx_cre_executions_streamer ON cre_workflow_executions(streamer_id, initiated_at DESC);
+
+-- =============================================================================
+-- LOOT DROPS
+-- =============================================================================
+
+CREATE TABLE loot_drops (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  streamer_id     UUID NOT NULL REFERENCES streamers(id) ON DELETE CASCADE,
+  trigger_type    TEXT NOT NULL,
+  trigger_reference_id UUID,
+  asset_id        UUID NOT NULL REFERENCES assets(id),
+  quantity_per_recipient INTEGER NOT NULL DEFAULT 1,
+  total_recipients INTEGER,
+  eligible_type   TEXT NOT NULL DEFAULT 'bond_holders',
+  eligible_config JSONB,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE loot_drop_grants (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  loot_drop_id    UUID NOT NULL REFERENCES loot_drops(id) ON DELETE CASCADE,
+  user_id         UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  user_asset_id   UUID REFERENCES user_assets(id),
+  granted_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  notified        BOOLEAN NOT NULL DEFAULT FALSE,
+  notified_at     TIMESTAMPTZ
+);
+
+CREATE INDEX idx_loot_drop_grants_drop ON loot_drop_grants(loot_drop_id);
+CREATE INDEX idx_loot_drop_grants_user ON loot_drop_grants(user_id, granted_at DESC);
+
+-- =============================================================================
+-- SESSIONS / REFRESH TOKENS
+-- =============================================================================
+
+CREATE TABLE refresh_tokens (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id         UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  token_hash      TEXT NOT NULL UNIQUE,
+  issued_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  expires_at      TIMESTAMPTZ NOT NULL,
+  revoked         BOOLEAN NOT NULL DEFAULT FALSE,
+  revoked_at      TIMESTAMPTZ,
+  user_agent      TEXT,
+  ip_address      INET
+);
+
+-- FIX: Changed 'revoked = FALSE' to 'NOT revoked' for immutability
+CREATE INDEX idx_refresh_tokens_user ON refresh_tokens(user_id, expires_at)
+  WHERE NOT revoked;
+
+CREATE INDEX idx_refresh_tokens_hash ON refresh_tokens(token_hash);
+
+-- =============================================================================
+-- TRIGGERS
+-- =============================================================================
+
+CREATE OR REPLACE FUNCTION sync_mana_balance()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE user_streamer_memberships
+  SET mana_balance = NEW.balance_after,
+      updated_at = NOW()
+  WHERE id = NEW.membership_id;
+
+  UPDATE users
+  SET global_mana_balance = (
+    SELECT COALESCE(SUM(mana_balance), 0)
+    FROM user_streamer_memberships
+    WHERE user_id = NEW.user_id
+  ),
+  updated_at = NOW()
+  WHERE id = NEW.user_id;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER mana_balance_sync
+  AFTER INSERT ON mana_ledger
+  FOR EACH ROW EXECUTE FUNCTION sync_mana_balance();
+
+CREATE OR REPLACE FUNCTION sync_xp_balance()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE user_streamer_memberships
+  SET xp_balance = NEW.balance_after,
+      updated_at = NOW()
+  WHERE id = NEW.membership_id;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER xp_balance_sync
+  AFTER INSERT ON xp_ledger
+  FOR EACH ROW EXECUTE FUNCTION sync_xp_balance();
+
+CREATE OR REPLACE FUNCTION sync_credits_balance()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE users
+  SET global_credits_balance_cents = NEW.balance_after_cents,
+      updated_at = NOW()
+  WHERE id = NEW.user_id;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER credits_balance_sync
+  AFTER INSERT ON credits_ledger
+  FOR EACH ROW EXECUTE FUNCTION sync_credits_balance();
+
+CREATE OR REPLACE FUNCTION set_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+CREATE TRIGGER streamers_updated_at BEFORE UPDATE ON streamers FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+CREATE TRIGGER assets_updated_at BEFORE UPDATE ON assets FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+CREATE TRIGGER bonds_updated_at BEFORE UPDATE ON bonds FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+CREATE TRIGGER listings_updated_at BEFORE UPDATE ON listings FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+CREATE TRIGGER stripe_payments_updated_at BEFORE UPDATE ON stripe_payments FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+CREATE TRIGGER user_achievements_updated_at BEFORE UPDATE ON user_achievements FOR EACH ROW EXECUTE FUNCTION set_updated_at();
