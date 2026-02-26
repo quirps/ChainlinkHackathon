@@ -1,0 +1,20 @@
+# apps/api/Cargo.toml
+[package]
+name = "api"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = { workspace = true }
+tokio = { workspace = true }
+sqlx = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+jsonwebtoken = { workspace = true }
+reqwest = { workspace = true }
+ethers = { workspace = true }
+redis = { workspace = true }
+dotenv = "0.15.0"
+env_logger = "0.10.2"
