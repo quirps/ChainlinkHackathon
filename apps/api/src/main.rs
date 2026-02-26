@@ -1,33 +1,54 @@
 // apps/api/src/main.rs
 use axum::{routing::get, Router};
+use sqlx::PgPool;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
 
 mod config;
+use config::Config;
+
+//temporary insertions to get this running
+mod db {
+    pub mod users;
+}
+
+mod middleware {
+    pub mod auth;
+}
+
+mod routes {
+    pub mod auth;
+}
+
+mod seed;
+
+use routes::auth::{twitch_login_init, twitch_callback};
+use seed::run_seed;
+
+
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+dotenv::dotenv().ok();
     env_logger::init();
 
     let config = Config::from_env().expect("Failed to load config");
     let pool = config.create_pool().await;
 
-    // Run migrations
     sqlx::migrate!("./migrations").run(&pool).await.expect("Migration failed");
 
-    // Seed if empty
+    // seed if empty
     let data_exists: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM users LIMIT 1)")
         .fetch_one(&pool)
         .await
         .unwrap_or(false);
 
     if !data_exists {
-        seed::run_seed(&pool).await.expect("Seeding failed");
+        run_seed(&pool).await.expect("Seeding failed");
     }
 
     let app = Router::new()
-        .route("/health", get(super::health_handler))
+        .route("/health", get(health_handler))
         .route("/auth/twitch", get(twitch_login_init))
         .route("/auth/callback", get(twitch_callback).with_state(pool.clone()));
 

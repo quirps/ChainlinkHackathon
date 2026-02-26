@@ -32,7 +32,7 @@ struct TwitchUserResponse {
     data: Vec<TwitchUserData>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 struct TwitchUserData {
     id: String,
     login: String,
@@ -71,7 +71,7 @@ pub async fn twitch_callback(
             ("client_id", &client_id),
             ("client_secret", &client_secret),
             ("code", &params.code),
-            ("grant_type", "authorization_code"),
+            ("grant_type", &"authorization_code".to_string()),
             ("redirect_uri", &redirect_uri),
         ])
         .send()

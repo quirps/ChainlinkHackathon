@@ -9,7 +9,7 @@ use std::env;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize,Clone)]
 pub struct Claims {
     pub sub: String, // User ID as string (parse to Uuid in handler if needed)
     pub exp: usize,
