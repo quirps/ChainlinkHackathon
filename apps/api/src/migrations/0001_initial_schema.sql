@@ -583,7 +583,7 @@ CREATE TABLE user_achievements (
   asset_granted_id  UUID REFERENCES user_assets(id),
 
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 
 );
 CREATE UNIQUE INDEX idx_user_achievements_unique ON user_achievements (user_id, achievement_key, COALESCE(streamer_id, '00000000-0000-0000-0000-000000000000'::UUID));
