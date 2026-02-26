@@ -528,3 +528,64 @@ CREATE TABLE bond_yield_payouts (
 
 CREATE INDEX idx_yield_events_streamer ON bond_yield_events(streamer_id, distributed_at DESC);
 CREATE INDEX idx_yield_payouts_holder ON bond_yield_payouts(holder_user_id, credited_at DESC);
+
+
+-- =============================================================================
+-- ACHIEVEMENTS
+-- Achievement definitions are seeded by the platform (not stored per-streamer yet).
+-- User progress and claim status are stored in user_achievements.
+-- =============================================================================
+
+CREATE TABLE achievement_definitions (
+  key             TEXT PRIMARY KEY,      -- e.g. 'first_blood', 'proof_of_humanity'
+  name            TEXT NOT NULL,
+  description     TEXT NOT NULL,
+  icon            TEXT NOT NULL DEFAULT '🏆',
+  sort_order      INTEGER NOT NULL DEFAULT 0,
+
+  -- Requirements (evaluated by backend service)
+  requirement_type  TEXT NOT NULL,
+  -- 'asset_purchase_count', 'watch_time_minutes', 'chat_message_count',
+  -- 'level_reached', 'bond_purchased', 'paid_support_cents',
+  -- 'stream_milestone_witnessed', 'consecutive_streams', 'human_interaction_count'
+  requirement_value INTEGER NOT NULL,   -- the threshold to hit
+
+  -- Reward
+  reward_mana       BIGINT NOT NULL DEFAULT 0,
+  reward_xp         INTEGER NOT NULL DEFAULT 0,
+  reward_asset_id   UUID REFERENCES assets(id),  -- null if no asset reward
+  reward_description TEXT,             -- human-readable reward summary
+
+  is_hidden         BOOLEAN NOT NULL DEFAULT FALSE,  -- locked achievements not shown until unlocked
+  is_global         BOOLEAN NOT NULL DEFAULT TRUE,   -- false = streamer-specific (future)
+
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE user_achievements (
+  id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id           UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  streamer_id       UUID REFERENCES streamers(id) ON DELETE CASCADE,
+  -- streamer_id null = global achievement, not null = streamer-specific
+
+  achievement_key   TEXT NOT NULL REFERENCES achievement_definitions(key),
+
+  status            achievement_status NOT NULL DEFAULT 'locked',
+  progress_value    INTEGER NOT NULL DEFAULT 0,   -- current progress toward requirement_value
+  -- e.g. if requirement is 50 human interactions and user has done 32, this is 32
+
+  claimable_at      TIMESTAMPTZ,    -- when status changed to 'claimable'
+  claimed_at        TIMESTAMPTZ,
+
+  -- What was actually granted (may differ from definition if config changed)
+  mana_granted      BIGINT,
+  xp_granted        INTEGER,
+  asset_granted_id  UUID REFERENCES user_assets(id),
+
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+);
+CREATE UNIQUE INDEX idx_user_achievements_unique ON user_achievements (user_id, achievement_key, COALESCE(streamer_id, '00000000-0000-0000-0000-000000000000'::UUID));
+CREATE INDEX idx_user_achievements_user ON user_achievements(user_id, status);
+CREATE INDEX idx_user_achievements_claimable ON user_achievements(user_id) WHERE status = 'claimable';
