@@ -1,0 +1,60 @@
+.zone {
+  padding: 14px 28px;
+}
+
+.nums {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 7px;
+}
+
+.current {
+  font-size: 10px;
+  color: var(--t2);
+  letter-spacing: 0.06em;
+}
+
+.nextLabel {
+  font-size: 9px;
+  color: var(--t3);
+}
+
+.track {
+  height: 2px;
+  background: var(--t3);
+  position: relative;
+  overflow: visible;
+}
+
+.fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--X);
+  transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fill::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--X);
+  box-shadow: 0 0 8px var(--X);
+}
+
+.sub {
+  font-size: 9px;
+  color: var(--t3);
+  margin-top: 5px;
+}
+
+.subXp {
+  color: var(--X);
+}

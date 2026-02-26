@@ -1,0 +1,77 @@
+.zone {
+  padding: 16px;
+  border-top: 1px solid var(--wire);
+}
+
+.label {
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  transition: background 0.15s;
+}
+
+/* Status variants */
+.row.status_done {
+  opacity: 0.45;
+}
+
+.row.status_current {
+  background: var(--Sx);
+  border: 1px solid rgba(217, 123, 58, 0.12);
+}
+
+.row.status_locked {
+  opacity: 0.3;
+  filter: saturate(0);
+}
+
+.icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  width: 26px;
+  text-align: center;
+}
+
+.info {
+  flex: 1;
+}
+
+.name {
+  font-size: 10px;
+  color: var(--t0);
+  line-height: 1.2;
+}
+
+.status_current .name {
+  color: var(--S);
+}
+
+.detail {
+  font-size: 9px;
+  color: var(--t3);
+  margin-top: 1px;
+}
+
+.level {
+  font-size: 8px;
+  color: var(--t3);
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}

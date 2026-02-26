@@ -1,0 +1,47 @@
+.strip {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 28px;
+}
+
+.subBtn,
+.bondBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  border-radius: 6px;
+  font-family: 'Azeret Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+}
+
+.subBtn {
+  background: rgba(145, 71, 255, 0.08);
+  border: 1px solid rgba(145, 71, 255, 0.2);
+  color: rgba(190, 160, 255, 0.8);
+}
+
+.subBtn:hover {
+  background: rgba(145, 71, 255, 0.16);
+  border-color: rgba(145, 71, 255, 0.45);
+}
+
+.bondBtn {
+  background: var(--Sx);
+  border: 1px solid rgba(217, 123, 58, 0.2);
+  color: var(--S);
+}
+
+.bondBtn:hover {
+  background: var(--Sg);
+  border-color: rgba(217, 123, 58, 0.45);
+}
+
+.price {
+  font-size: 9px;
+  opacity: 0.7;
+}

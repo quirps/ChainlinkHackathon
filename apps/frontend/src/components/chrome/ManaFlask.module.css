@@ -1,0 +1,41 @@
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(125, 216, 255, 0.07);
+  border: 1px solid rgba(125, 216, 255, 0.18);
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pill:hover {
+  border-color: rgba(125, 216, 255, 0.4);
+  background: rgba(58, 171, 245, 0.13);
+}
+
+.flask {
+  width: 16px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.amount {
+  font-family: 'Anybody', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--M0), var(--M1));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.label {
+  font-size: 8px;
+  color: var(--t3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}

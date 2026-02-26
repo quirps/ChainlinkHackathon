@@ -1,0 +1,32 @@
+.page {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Per-streamer ambient glow */
+.amb {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(
+      ellipse 50% 40% at 15% 60%,
+      color-mix(in srgb, var(--brand) 8%, transparent) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 30% 25% at 85% 20%,
+      rgba(58, 171, 245, 0.04) 0%,
+      transparent 50%
+    );
+}
+
+/* Three-column layout */
+.layout {
+  display: flex;
+  padding-top: var(--chrome-h);
+  position: relative;
+  z-index: 10;
+  min-height: calc(100vh - var(--chrome-h));
+}

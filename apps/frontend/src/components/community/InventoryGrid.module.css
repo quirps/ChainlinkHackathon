@@ -1,0 +1,124 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 16px;
+}
+
+.empty {
+  padding: 48px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.emptyGlyph {
+  font-size: 24px;
+  color: var(--t3);
+}
+
+.empty p {
+  font-size: 10px;
+  color: var(--t3);
+  line-height: 1.6;
+  max-width: 220px;
+}
+
+.slot {
+  background: var(--ink2);
+  border: 1px solid var(--wire);
+  border-radius: 7px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.slot:hover {
+  border-color: var(--wire2);
+  background: var(--ink3);
+}
+
+.rarity_legendary { border-color: rgba(217, 123, 58, 0.18); }
+.rarity_legendary:hover { border-color: rgba(217, 123, 58, 0.4); }
+.rarity_rare      { border-color: rgba(155, 110, 232, 0.15); }
+.rarity_epic      { border-color: rgba(155, 110, 232, 0.15); }
+
+.consumed {
+  filter: saturate(0.2) brightness(0.5);
+}
+
+.listed {
+  box-shadow: 0 0 0 1px rgba(58, 171, 245, 0.25);
+}
+
+.glyph {
+  font-size: 26px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--t1);
+  line-height: 1.2;
+}
+
+.seller {
+  font-size: 8px;
+  color: var(--M1);
+}
+
+.gain {
+  font-size: 9px;
+  color: var(--X);
+  font-family: 'Anybody', sans-serif;
+  font-weight: 700;
+}
+
+.badges {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.badgeListed {
+  font-size: 7px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--M1);
+  background: var(--Mg);
+  border-radius: 2px;
+  padding: 1px 4px;
+}
+
+.badgeActive {
+  font-size: 7px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--X);
+  background: var(--Xg);
+  border-radius: 2px;
+  padding: 1px 4px;
+}
+
+.badgeUsed {
+  font-size: 7px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--t3);
+  border: 1px solid var(--wire);
+  border-radius: 2px;
+  padding: 1px 4px;
+}

@@ -1,0 +1,116 @@
+.zone {
+  padding: 0 28px;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.glyphWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.glyph {
+  font-size: 36px;
+  filter: drop-shadow(0 0 10px rgba(217, 123, 58, 0.35));
+  animation: glyphFloat 6s ease-in-out infinite;
+  display: block;
+  cursor: default;
+}
+
+@keyframes glyphFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-5px); }
+}
+
+/* Tooltip — shown on glyph hover */
+.glyphWrap:hover .tooltip {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0) translateY(-50%);
+}
+
+.tooltip {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateX(-6px) translateY(-50%);
+  width: 200px;
+  background: rgba(11, 13, 20, 0.98);
+  border: 1px solid var(--wire2);
+  border-radius: 7px;
+  padding: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 200;
+}
+
+/* Arrow */
+.tooltip::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: rgba(11, 13, 20, 0.98);
+  border-left: 1px solid var(--wire2);
+  border-bottom: 1px solid var(--wire2);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.tooltipTitle {
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 10px;
+}
+
+.perk {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 6px;
+  font-size: 10px;
+  color: var(--t1);
+  line-height: 1.4;
+}
+
+.perk::before {
+  content: '—';
+  color: var(--t3);
+  font-size: 8px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.perkValue {
+  color: var(--X);
+  margin-right: 2px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.tierName {
+  font-family: 'Instrument Serif', serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--S);
+  line-height: 1.1;
+}
+
+.tierLevel {
+  font-size: 9px;
+  color: var(--t2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}

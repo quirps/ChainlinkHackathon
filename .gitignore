@@ -3,7 +3,7 @@ Layout
 
 .env
 
-
+node_modules/
 
 #docker
 infra 

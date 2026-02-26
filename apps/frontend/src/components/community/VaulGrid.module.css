@@ -1,0 +1,46 @@
+.wrap {
+  padding: 0 16px 16px;
+}
+
+.filterRow {
+  display: flex;
+  gap: 6px;
+  padding: 12px 0;
+}
+
+.chip {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-family: 'Azeret Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--t3);
+  border: 1px solid var(--wire);
+  transition: all 0.15s;
+}
+
+.chip:hover {
+  color: var(--t1);
+  border-color: var(--wire2);
+}
+
+.chipOn {
+  color: var(--S);
+  border-color: rgba(217, 123, 58, 0.35);
+  background: var(--Sx);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.empty {
+  padding: 40px 0;
+  text-align: center;
+  font-size: 10px;
+  color: var(--t3);
+  font-style: italic;
+}

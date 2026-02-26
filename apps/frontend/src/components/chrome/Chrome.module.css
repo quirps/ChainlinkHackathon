@@ -1,0 +1,130 @@
+.chrome {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  background: rgba(7, 8, 12, 0.92);
+  border-bottom: 1px solid var(--wire);
+  backdrop-filter: blur(20px);
+}
+
+.logo {
+  font-family: 'Anybody', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--t3);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.crumb {
+  font-size: 10px;
+  color: var(--t3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.crumbChannel {
+  color: var(--S);
+  font-size: 12px;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+}
+
+.liveBadge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(240, 48, 80, 0.1);
+  border: 1px solid rgba(240, 48, 80, 0.2);
+  border-radius: 3px;
+  padding: 2px 8px;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--L);
+}
+
+.liveDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--L);
+  animation: livePulse 1.2s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+
+.right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.credsPill {
+  font-size: 11px;
+  color: var(--t1);
+  background: var(--ink3);
+  border: 1px solid var(--wire2);
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.credsPill:hover {
+  border-color: var(--S);
+}
+
+.credsAdd {
+  font-size: 9px;
+  color: var(--S);
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--S), var(--R));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Anybody', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1.5px solid rgba(217, 123, 58, 0.3);
+  cursor: pointer;
+}
+
+.signInBtn {
+  background: rgba(145, 71, 255, 0.12);
+  border: 1px solid rgba(145, 71, 255, 0.3);
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-family: 'Azeret Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(190, 160, 255, 1);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.signInBtn:hover {
+  background: rgba(145, 71, 255, 0.22);
+  border-color: rgba(145, 71, 255, 0.55);
+}
