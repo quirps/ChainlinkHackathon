@@ -9,14 +9,22 @@ import { api } from '../../lib/api'
 import styles from './MainColumn.module.css'
 
 export function MainColumn() {
-  const activeTab   = useUIStore((s) => s.activeTab)
+  const activeTab    = useUIStore((s) => s.activeTab)
   const setActiveTab = useUIStore((s) => s.setActiveTab)
-  const addToast    = useUIStore((s) => s.addToast)
-  const inventory   = useStreamerStore((s) => s.userInventory)
+  const addToast     = useUIStore((s) => s.addToast)
+  const openAuthModal = useUIStore((s) => s.openCommunityAuthModal)
+  const inventory    = useStreamerStore((s) => s.userInventory)
   const addUserAsset = useStreamerStore((s) => s.addUserAsset)
-  const deductMana  = useUserStore((s) => s.deductMana)
+  const deductMana   = useUserStore((s) => s.deductMana)
+  const isAuthenticated = useUserStore((s) => s.isAuthenticated)
 
   const handlePurchase = async (asset) => {
+    // Gate: must be logged in
+    if (!isAuthenticated) {
+      openAuthModal()
+      return
+    }
+
     const currency = asset.priceType === 'credits' ? 'credits' : 'mana'
     const result   = await api.purchaseAsset(asset.id, currency)
 

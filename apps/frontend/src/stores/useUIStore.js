@@ -6,10 +6,13 @@ export const useUIStore = create(
     activeTab: 'market',        // 'market' | 'inventory'
     marketFilter: 'mana',       // 'mana' | 'credits' | 'all'
 
+    // Modals
     achievementsModalOpen: false,
     levelUpModalOpen: false,
     welcomeDropModalOpen: false,
-    levelUpData: null,          // { levelBefore, levelAfter, tierName }
+    communityAuthModalOpen: false,   // Twitch-only — community pages
+    web3AuthModalOpen: false,        // Full wallet+social — trader/market pages
+    levelUpData: null,               // { levelBefore, levelAfter, tierName }
 
     toasts: [],                 // [{ id, icon, title, subtitle, type }]
 
@@ -31,10 +34,15 @@ export const useUIStore = create(
     openWelcomeDropModal:  () => set((s) => { s.welcomeDropModalOpen = true }),
     closeWelcomeDropModal: () => set((s) => { s.welcomeDropModalOpen = false }),
 
+    openCommunityAuthModal: () => set((s) => { s.communityAuthModalOpen = true }),
+    closeCommunityAuthModal: () => set((s) => { s.communityAuthModalOpen = false }),
+
+    openWeb3AuthModal: () => set((s) => { s.web3AuthModalOpen = true }),
+    closeWeb3AuthModal: () => set((s) => { s.web3AuthModalOpen = false }),
+
     addToast: (toast) => set((s) => {
       const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
       s.toasts.push({ ...toast, id })
-      // Belt-and-suspenders cleanup after 3.4s (component also handles its own removal)
       setTimeout(() => {
         set((inner) => { inner.toasts = inner.toasts.filter((t) => t.id !== id) })
       }, 3400)
