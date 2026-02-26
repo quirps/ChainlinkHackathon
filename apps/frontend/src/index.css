@@ -1,0 +1,103 @@
+/* ─────────────────────────────────────────────────────────────
+   RESET
+───────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { font-size: 14px; height: 100%; }
+body { height: 100%; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DESIGN TOKENS
+───────────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --ink:   #07080C;
+  --ink2:  #0B0D14;
+  --ink3:  #10121A;
+
+  /* Borders */
+  --wire:  rgba(255, 255, 255, 0.055);
+  --wire2: rgba(255, 255, 255, 0.10);
+  --wire3: rgba(255, 255, 255, 0.16);
+
+  /* Text scale */
+  --t0: #F0F2F8;
+  --t1: #BCC5DA;
+  --t2: #6E7D9B;
+  --t3: #2E374D;
+
+  /* Brand — ember orange */
+  --S:  #D97B3A;
+  --Sg: rgba(217, 123, 58, 0.14);
+  --Sx: rgba(217, 123, 58, 0.06);
+
+  /* Mana — electric blue */
+  --M0: #7DD8FF;
+  --M1: #3AABF5;
+  --M2: #1A6ECC;
+  --Mg: rgba(58, 171, 245, 0.10);
+
+  /* XP / success — mint */
+  --X:  #27C98A;
+  --Xg: rgba(39, 201, 138, 0.10);
+
+  /* Rarity — purple */
+  --R:  #9B6EE8;
+  --Rg: rgba(155, 110, 232, 0.12);
+
+  /* Live red */
+  --L:  #F03050;
+
+  /* Layout */
+  --chrome-h: 44px;
+  --col-id-w: 280px;
+  --col-right-w: 260px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BASE
+───────────────────────────────────────────────────────────── */
+body {
+  background: var(--ink);
+  color: var(--t0);
+  font-family: 'Azeret Mono', monospace;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   GRAIN OVERLAY (applied to #root so all pages get it)
+───────────────────────────────────────────────────────────── */
+#root::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.55;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23f)' opacity='.06'/%3E%3C/svg%3E");
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SCROLLBARS
+───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--t3); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--t2); }
