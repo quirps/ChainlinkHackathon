@@ -1,1 +1,12 @@
 Layout
+
+.env
+
+
+
+#docker
+infra 
+
+#rust 
+Cargo.lock
+target 
