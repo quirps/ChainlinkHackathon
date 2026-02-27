@@ -1,0 +1,91 @@
+.section {
+  padding: 120px 0;
+  border-top: 1px solid var(--wire);
+  position: relative;
+  text-align: center;
+}
+
+.amb {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(145,71,255,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.eyebrow {
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 20px;
+}
+
+.heading {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 48px;
+  color: var(--t0);
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.sub {
+  font-size: 13px;
+  color: var(--t2);
+  line-height: 1.8;
+  margin-bottom: 36px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  font-family: 'Azeret Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--t0);
+  background: rgba(145, 71, 255, 0.12);
+  border: 1px solid rgba(145, 71, 255, 0.3);
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btnPrimary:hover {
+  background: rgba(145, 71, 255, 0.2);
+  border-color: rgba(145, 71, 255, 0.55);
+  box-shadow: 0 0 32px rgba(145, 71, 255, 0.12);
+}
+
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  font-family: 'Azeret Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--t2);
+  background: none;
+  border: 1px solid var(--wire2);
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btnSecondary:hover { color: var(--t1); border-color: var(--wire3); }

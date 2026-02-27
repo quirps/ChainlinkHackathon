@@ -211,3 +211,51 @@ export const MOCK_PAGE_DATA = {
     },
   ],
 }
+
+// ─── Trader / Market page mock data ───────────────────────────────────────────
+// Mirrors getMarketPageData() response shape.
+
+export const MOCK_MARKET_DATA = {
+  streamers: [
+    { id: 'nightowltv', name: 'NightOwlTV',  avi: '🦉', cat: 'FPS',     price: 4.20,  chg: +4.2, yield: 2.1, supplyLeft: 312, holders: 89,  momentum: 78, tranche: 1, live: true  },
+    { id: 'prism',      name: 'PrismPlays',  avi: '🔮', cat: 'Variety', price: 6.80,  chg: -1.1, yield: 3.4, supplyLeft: 44,  holders: 211, momentum: 35, tranche: 2, live: true  },
+    { id: 'voidwalker', name: 'VoidWalker',  avi: '🌌', cat: 'RPG',     price: 2.10,  chg: +8.7, yield: 1.2, supplyLeft: 488, holders: 34,  momentum: 92, tranche: 1, live: false },
+    { id: 'solstice',   name: 'SolsticeGG',  avi: '☀️', cat: 'Esports', price: 11.40, chg: +2.3, yield: 4.8, supplyLeft: 8,   holders: 443, momentum: 55, tranche: 3, live: true  },
+    { id: 'cryo',       name: 'CryoKnight',  avi: '❄️', cat: 'FPS',     price: 3.50,  chg: -0.4, yield: 1.8, supplyLeft: 201, holders: 67,  momentum: 40, tranche: 1, live: false },
+    { id: 'axiom',      name: 'AxiomCast',   avi: '⚡', cat: 'Esports', price: 8.90,  chg: +5.7, yield: 3.9, supplyLeft: 55,  holders: 178, momentum: 85, tranche: 2, live: true  },
+    { id: 'dusk',       name: 'DuskFall',    avi: '🌙', cat: 'IRL',     price: 1.80,  chg:  0.0, yield: 0.9, supplyLeft: 390, holders: 22,  momentum: 20, tranche: 1, live: false },
+    { id: 'neon',       name: 'NeonDrifter', avi: '🎮', cat: 'RPG',     price: 5.20,  chg: -2.1, yield: 2.6, supplyLeft: 127, holders: 94,  momentum: 28, tranche: 2, live: false },
+    { id: 'blaze',      name: 'BlazeRunner', avi: '🔥', cat: 'FPS',     price: 7.60,  chg: +3.4, yield: 3.2, supplyLeft: 72,  holders: 156, momentum: 67, tranche: 2, live: true  },
+    { id: 'luna',       name: 'LunaStream',  avi: '🌛', cat: 'IRL',     price: 2.90,  chg: +1.8, yield: 1.5, supplyLeft: 260, holders: 41,  momentum: 45, tranche: 1, live: false },
+  ],
+  myBonds: [
+    { id: 'nightowltv', name: 'NightOwlTV', qty: 3, cost: 3.80, current: 4.20 },
+    { id: 'prism',      name: 'PrismPlays', qty: 1, cost: 7.20, current: 6.80 },
+    { id: 'voidwalker', name: 'VoidWalker', qty: 5, cost: 1.90, current: 2.10 },
+  ],
+  yieldEvents: [
+    { type: 'up',  actor: 'NightOwlTV',  action: 'bond yield',      detail: '+$0.84',          time: '2m'  },
+    { type: 'neu', actor: 'PrismPlays',  action: 'listing sold',    detail: 'fee distributed', time: '8m'  },
+    { type: 'up',  actor: 'VoidWalker',  action: 'bond yield',      detail: '+$2.10',          time: '15m' },
+    { type: 'up',  actor: 'AxiomCast',   action: 'watchtime spike', detail: 'community bonus', time: '22m' },
+    { type: 'dn',  actor: 'CryoKnight',  action: 'stream ended',    detail: 'yield paused',    time: '41m' },
+    { type: 'up',  actor: 'SolsticeGG',  action: 'tournament win',  detail: 'volume surge',    time: '1h'  },
+    { type: 'neu', actor: 'NightOwlTV',  action: 'new asset drop',  detail: '32 purchases',    time: '2h'  },
+  ],
+}
+
+// ─── Landing page mock data ────────────────────────────────────────────────────
+
+export const MOCK_LANDING_DATA = {
+  stats: [
+    { num: '14,208', label: 'Active viewers'    },
+    { num: '$247K',  label: 'Bond value locked' },
+    { num: '89',     label: 'Streamers live'    },
+    { num: '3.4%',   label: 'Avg monthly yield' },
+  ],
+  liveStreamers: [
+    { id: 'nightowltv', name: 'NightOwlTV', avi: '🦉', live: true,  viewers: '14.2K', bond: '$4.20', chg: '+4.2%', pos: true  },
+    { id: 'prism',      name: 'PrismPlays', avi: '🔮', live: true,  viewers: '8.7K',  bond: '$6.80', chg: '-1.1%', pos: false },
+    { id: 'voidwalker', name: 'VoidWalker', avi: '🌌', live: false, viewers: '—',     bond: '$2.10', chg: '+8.7%', pos: true  },
+  ],
+}

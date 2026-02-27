@@ -1,0 +1,44 @@
+.feed {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  border-bottom: 1px solid var(--wire);
+}
+
+.head {
+  padding: 8px 14px;
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--t3);
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--wire);
+}
+
+.list { overflow-y: auto; flex: 1; }
+.list::-webkit-scrollbar { width: 2px; }
+.list::-webkit-scrollbar-thumb { background: var(--t3); }
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.025);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.item:hover { background: rgba(255,255,255,0.02); }
+
+.dot    { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.dotUp  { background: var(--X); }
+.dotDn  { background: var(--L); }
+.dotNeu { background: var(--t3); }
+
+.body   { flex: 1; font-size: 9px; color: var(--t2); line-height: 1.5; }
+.actor  { color: var(--t1); font-weight: 500; }
+.action { color: var(--t2); }
+.up     { color: var(--X); }
+.time   { font-size: 8px; color: var(--t3); flex-shrink: 0; margin-top: 1px; }

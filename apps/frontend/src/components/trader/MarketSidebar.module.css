@@ -1,0 +1,68 @@
+.sidebar {
+  border-right: 1px solid var(--wire);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: rgba(7, 8, 12, 0.5);
+}
+
+.sidebar::-webkit-scrollbar { width: 2px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--t3); }
+
+.section { border-bottom: 1px solid var(--wire); }
+
+.sectionHead {
+  padding: 8px 12px 6px;
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--t3);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  font-size: 10px;
+  color: var(--t2);
+  cursor: pointer;
+  transition: all 0.12s;
+  border-left: 2px solid transparent;
+}
+
+.item:hover { color: var(--t1); background: rgba(255,255,255,0.02); }
+
+.itemOn {
+  color: var(--t0);
+  border-left-color: var(--S);
+  background: rgba(217, 123, 58, 0.04);
+}
+
+.itemVal { font-size: 9px; }
+
+.bondItem {
+  padding: 7px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.025);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.bondItem:hover { background: rgba(255,255,255,0.02); }
+
+.bondTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2px;
+}
+
+.bondName { font-size: 10px; color: var(--t1); }
+.bondPnl  { font-size: 9px; }
+.bondBot  { display: flex; justify-content: space-between; }
+.bondQty  { font-size: 8px; color: var(--t3); }
+.bondVal  { font-size: 8px; color: var(--t2); }
+
+.up  { color: var(--X); }
+.dn  { color: var(--L); }
+.neu { color: var(--t3); }

@@ -1,0 +1,48 @@
+.panel { border-bottom: 1px solid var(--wire); flex-shrink: 0; }
+
+.head {
+  padding: 8px 14px;
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--t3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.action { color: var(--t2); cursor: pointer; transition: color 0.15s; }
+.action:hover { color: var(--t1); }
+
+.body { padding: 10px 14px 14px; }
+
+.total {
+  font-family: 'Anybody', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--t0);
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.pnl { font-size: 10px; margin-bottom: 10px; }
+.up  { color: var(--X); }
+.dn  { color: var(--L); }
+
+.bars { display: flex; flex-direction: column; gap: 5px; }
+
+.barRow { display: flex; align-items: center; gap: 8px; }
+
+.barName {
+  font-size: 9px;
+  color: var(--t2);
+  width: 64px;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.barTrack { flex: 1; height: 2px; background: var(--ink3); border-radius: 1px; position: relative; }
+.barFill  { position: absolute; left: 0; top: 0; height: 100%; border-radius: 1px; background: var(--S); }
+.barPct   { font-size: 8px; color: var(--t3); width: 28px; text-align: right; flex-shrink: 0; }

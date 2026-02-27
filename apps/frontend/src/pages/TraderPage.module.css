@@ -1,0 +1,31 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--ink);
+  font-family: 'Azeret Mono', monospace;
+}
+
+.body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 200px 1fr 260px;
+  overflow: hidden;
+}
+
+/* Main column needs relative positioning for the BondDetail slide-in */
+.colMain {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.colRight {
+  border-left: 1px solid var(--wire);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgba(7, 8, 12, 0.4);
+}

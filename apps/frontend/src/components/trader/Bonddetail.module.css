@@ -1,0 +1,154 @@
+.panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 296px;
+  background: var(--ink2);
+  border-left: 1px solid var(--wire2);
+  z-index: 50;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel::-webkit-scrollbar { width: 2px; }
+.panel::-webkit-scrollbar-thumb { background: var(--t3); }
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 11px;
+  color: var(--t2);
+  background: none;
+  border: 1px solid var(--wire);
+  border-radius: 3px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  z-index: 1;
+}
+
+.close:hover { color: var(--t0); border-color: var(--wire2); }
+
+.header { padding: 14px 14px 0; }
+
+.streamer { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+
+.avi {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  background: var(--ink3);
+  border: 1px solid var(--wire);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.name   { font-family: 'Instrument Serif', serif; font-size: 16px; font-style: italic; color: var(--t0); }
+.handle { font-size: 9px; color: var(--t3); margin-top: 1px; }
+
+.statRow { display: flex; gap: 6px; margin-bottom: 12px; }
+
+.stat {
+  flex: 1;
+  padding: 7px 8px;
+  background: var(--ink3);
+  border: 1px solid var(--wire);
+  border-radius: 4px;
+}
+
+.statVal   { font-size: 12px; font-weight: 500; color: var(--t0); line-height: 1; margin-bottom: 2px; }
+.statLabel { font-size: 7px; color: var(--t3); letter-spacing: 0.08em; text-transform: uppercase; }
+
+.up { color: var(--X); }
+.dn { color: var(--L); }
+
+.divider { height: 1px; background: var(--wire); margin: 10px 0; }
+
+.sectionLabel {
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--t3);
+  padding: 0 14px 8px;
+}
+
+.chart { margin: 0 14px 10px; height: 52px; border-bottom: 1px solid var(--wire); }
+.chart svg { width: 100%; height: 100%; }
+
+.tranches { padding: 0 14px; }
+
+.trancheRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-size: 10px;
+}
+
+.trancheRow:last-child { border-bottom: none; }
+.trancheName  { color: var(--t2); }
+.tranchePrice { color: var(--t0); }
+.trancheAvail { font-size: 9px; color: var(--t3); }
+
+.buyBlock { padding: 12px 14px; }
+.buyRow   { display: flex; gap: 6px; margin-bottom: 6px; }
+
+.qtyInput {
+  flex: 1;
+  background: var(--ink3);
+  border: 1px solid var(--wire2);
+  border-radius: 3px;
+  padding: 7px 8px;
+  font-family: 'Azeret Mono', monospace;
+  font-size: 11px;
+  color: var(--t0);
+  outline: none;
+}
+
+.qtyInput:focus { border-color: rgba(217, 123, 58, 0.4); }
+
+.maxBtn {
+  background: var(--Sg);
+  border: 1px solid rgba(217, 123, 58, 0.3);
+  border-radius: 3px;
+  padding: 7px 10px;
+  font-family: 'Azeret Mono', monospace;
+  font-size: 9px;
+  color: var(--S);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.maxBtn:hover { background: rgba(217, 123, 58, 0.2); }
+
+.total { font-size: 9px; color: var(--t3); margin-bottom: 8px; }
+.total span { color: var(--t1); }
+
+.confirmBtn {
+  width: 100%;
+  padding: 9px;
+  background: rgba(217, 123, 58, 0.1);
+  border: 1px solid rgba(217, 123, 58, 0.25);
+  border-radius: 4px;
+  font-family: 'Anybody', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--S);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.confirmBtn:hover { background: rgba(217, 123, 58, 0.18); border-color: var(--S); }

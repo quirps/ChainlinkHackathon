@@ -1,0 +1,8 @@
+/* LandingPage owns only root scroll container.
+   All section styles live in their own component modules. */
+.root {
+  background: var(--ink);
+  color: var(--t0);
+  font-family: 'Azeret Mono', monospace;
+  overflow-x: hidden;
+}
