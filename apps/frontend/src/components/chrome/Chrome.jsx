@@ -6,23 +6,34 @@ import { useDynamicContext } from '@dynamic-labs/sdk-react-core'
 import styles from './Chrome.module.css'
 
 export function Chrome({ streamerChannelName }) {
-  const user    = useUserStore((s) => s.user)
-  const isLive  = useStreamerStore((s) => s.streamer?.isLive ?? false)
+  const storeUser = useUserStore((s) => s.user)
+  const isLive    = useStreamerStore((s) => s.streamer?.isLive ?? false)
 
   const openCommunityAuth = useUIStore((s) => s.openCommunityAuthModal)
   const openWeb3Auth      = useUIStore((s) => s.openWeb3AuthModal)
 
-  const { handleLogOut } = useDynamicContext()
-  const logout           = useUserStore((s) => s.logout)
+  const { user: dynamicUser, handleLogOut } = useDynamicContext()
+  const logout = useUserStore((s) => s.logout)
 
-  const creditsCents   = user?.globalCreditBalanceCents ?? 0
+  // Use !!dynamicUser as the auth check — isAuthenticated is undefined in Dynamic SDK
+  // Also accept storeUser as a fallback (already hydrated from a previous session)
+  const isConnected = !!dynamicUser || !!storeUser
+
+  // Prefer storeUser (backend-enriched) for display, fall back to raw Dynamic data
+  const displayName = storeUser?.twitchDisplayName
+    ?? storeUser?.twitchUsername
+    ?? dynamicUser?.verifiedCredentials?.find((c) => c.oauthProvider === 'twitch')?.oauthUsername
+    ?? dynamicUser?.alias
+    ?? 'Connected'
+
+  const creditsCents   = storeUser?.globalCreditBalanceCents ?? 0
   const creditsDisplay = (creditsCents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
 
   const handleConnectClick = () => {
     streamerChannelName ? openCommunityAuth() : openWeb3Auth()
   }
 
-  const handleAvatarClick = () => {
+  const handleSignOut = () => {
     handleLogOut()
     logout()
   }
@@ -45,34 +56,28 @@ export function Chrome({ streamerChannelName }) {
       )}
 
       <div className={styles.right}>
-        {user ? (
+        {isConnected ? (
           <>
             <ManaFlask />
             <div className={styles.credsPill}>
               {creditsDisplay}
               <span className={styles.credsAdd}>+ Add</span>
             </div>
-            {/* ── Connected user pill — shows Twitch username ── */}
             <div
               className={styles.userPill}
               title="Click to sign out"
-              onClick={handleAvatarClick}
+              onClick={handleSignOut}
               role="button"
               tabIndex={0}
             >
               <TwitchIcon />
-              <span className={styles.userName}>
-                {user.twitchDisplayName ?? user.twitchUsername ?? 'Connected'}
-              </span>
+              <span className={styles.userName}>{displayName}</span>
             </div>
           </>
         ) : (
           <button className={styles.signInBtn} onClick={handleConnectClick}>
-            {streamerChannelName ? (
-              <><TwitchIcon /> Connect Twitch</>
-            ) : (
-              'Connect'
-            )}
+            <TwitchIcon />
+            {streamerChannelName ? 'Connect Twitch' : 'Connect'}
           </button>
         )}
       </div>

@@ -41,12 +41,12 @@ export function CommunityPage() {
   const closeCommunityAuth   = useUIStore((s) => s.closeCommunityAuthModal)
 
   // Auto-close auth modal when Dynamic completes login
-  const { isAuthenticated } = useDynamicContext()
+  const { user: dynamicUser } = useDynamicContext()
   useEffect(() => {
-    if (isAuthenticated && communityAuthOpen) {
+    if (!!dynamicUser && communityAuthOpen) {
       closeCommunityAuth()
     }
-  }, [isAuthenticated, communityAuthOpen, closeCommunityAuth])
+  }, [dynamicUser, communityAuthOpen, closeCommunityAuth])
 
   // ── Data loading ───────────────────────────────────────────
   const { data, isError } = useQuery({
