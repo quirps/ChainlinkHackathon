@@ -1,130 +1,106 @@
 .card {
   background: var(--ink2);
   border: 1px solid var(--wire);
-  border-radius: 8px;
+  border-radius: 7px;
   overflow: hidden;
-  cursor: pointer;
-  transition:
-    border-color 0.25s,
-    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  display: flex;
-  flex-direction: column;
-  animation: cardIn 0.4s both;
+  transition: border-color 0.2s, background 0.2s;
+  animation: cardIn 0.3s both;
 }
 
 @keyframes cardIn {
-  from { opacity: 0; transform: translateY(8px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0)  scale(1); }
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.card:hover {
-  transform: translateY(-2px);
-}
+.card:hover { background: var(--ink3); }
 
-/* Rarity border colours */
-.card.rarity_legendary { border-color: rgba(217, 123, 58, 0.18); grid-column: span 2; }
-.card.rarity_legendary:hover { border-color: rgba(217, 123, 58, 0.45); box-shadow: 0 8px 28px rgba(217, 123, 58, 0.13); }
-.card.rarity_rare      { border-color: rgba(155, 110, 232, 0.15); }
-.card.rarity_rare:hover { border-color: rgba(155, 110, 232, 0.4); box-shadow: 0 8px 24px rgba(155, 110, 232, 0.1); }
+.card.rarity_legendary { border-color: rgba(217, 123, 58, 0.2); }
+.card.rarity_legendary:hover { border-color: rgba(217, 123, 58, 0.4); }
+.card.rarity_rare,
+.card.rarity_epic { border-color: rgba(155, 110, 232, 0.15); }
+.card.rarity_rare:hover,
+.card.rarity_epic:hover { border-color: rgba(155, 110, 232, 0.35); }
 
-/* Locked state */
 .card.locked {
-  filter: saturate(0.25) brightness(0.6);
+  filter: saturate(0.2) brightness(0.55);
   cursor: not-allowed;
-  position: relative;
-}
-
-.card.locked::after {
-  content: '';
-  position: absolute;
-  inset: 0;
   background-image: repeating-linear-gradient(
     45deg,
-    rgba(255, 255, 255, 0.025) 0,
-    rgba(255, 255, 255, 0.025) 1px,
-    transparent 1px,
-    transparent 6px
+    rgba(255,255,255,0.018) 0, rgba(255,255,255,0.018) 1px,
+    transparent 1px, transparent 7px
   );
-  border-radius: 8px;
-  pointer-events: none;
 }
 
-.card.locked:hover { transform: none; }
-
-/* Layout */
-.vis {
-  padding: 18px 20px 0;
+.inner {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
   gap: 10px;
+  padding: 10px 12px;
 }
 
+/* ── Emoji ─────────────────────────────────────────────── */
 .glyph {
-  font-size: 34px;
+  font-size: 22px;
   line-height: 1;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   flex-shrink: 0;
+  width: 28px;
+  text-align: center;
 }
 
-.rarity_legendary .glyph { font-size: 58px; }
-
-.card:not(.locked):hover .glyph {
-  transform: scale(1.08) translateY(-3px);
-}
-
-.rarityMark {
-  font-size: 7px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 2px 5px;
-  border-radius: 2px;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.rarityMark.rarity_legendary { color: var(--S); background: var(--Sg); border: 1px solid rgba(217, 123, 58, 0.2); }
-.rarityMark.rarity_epic      { color: var(--R); background: var(--Rg); border: 1px solid rgba(155, 110, 232, 0.2); }
-.rarityMark.rarity_rare      { color: var(--R); background: var(--Rg); border: 1px solid rgba(155, 110, 232, 0.2); }
-.rarityMark.rarity_common    { color: var(--t3); border: 1px solid var(--wire); }
-
-.body {
-  padding: 10px 20px 16px;
+/* ── Middle: name + desc ────────────────────────────────── */
+.mid {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  flex: 1;
+  gap: 2px;
 }
 
-.sellerBadge {
-  font-size: 9px;
-  color: var(--t3);
-  margin-bottom: 3px;
-}
-
-.sellerName {
-  background: linear-gradient(135deg, var(--M0), var(--M1));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.topRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .name {
   font-family: 'Instrument Serif', serif;
-  font-size: 16px;
+  font-size: 13px;
   color: var(--t0);
-  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.2;
 }
 
-.rarity_legendary .name { font-size: 20px; }
+/* tiny colour dot for rarity */
+.rarityDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot_legendary { background: var(--S); }
+.dot_epic,
+.dot_rare      { background: var(--R); }
+.dot_common    { background: var(--t3); }
 
 .desc {
   font-size: 9px;
   color: var(--t2);
-  line-height: 1.6;
-  margin-bottom: 8px;
-  flex: 1;
+  line-height: 1.5;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.seller {
+  font-size: 9px;
+  color: var(--t3);
+}
+
+.sellerName {
+  color: var(--M1);
 }
 
 .xpPill {
@@ -132,29 +108,34 @@
   color: var(--X);
   background: var(--Xg);
   border-radius: 2px;
-  padding: 2px 6px;
-  margin-bottom: 8px;
+  padding: 1px 5px;
   display: inline-block;
+  align-self: flex-start;
 }
 
-.foot {
+/* ── Right: price + button ─────────────────────────────── */
+.right {
   display: flex;
+  flex-direction: column;
   align-items: flex-end;
-  justify-content: space-between;
-  padding-top: 8px;
-  border-top: 1px solid var(--wire);
+  gap: 4px;
+  flex-shrink: 0;
 }
 
-.priceNum {
+.priceCol {
+  text-align: right;
+  line-height: 1.1;
+}
+
+.price {
   font-family: 'Anybody', sans-serif;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1;
   color: var(--t0);
+  display: block;
 }
 
-.priceNum.priceNumMana {
+.priceMana {
   background: linear-gradient(135deg, var(--M0), var(--M1));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -165,44 +146,36 @@
   font-size: 8px;
   color: var(--t3);
   letter-spacing: 0.06em;
-  margin-top: 2px;
 }
 
-.acquireBtn {
+.lockInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.lockIcon { font-size: 12px; }
+.lockLevel { font-size: 8px; color: var(--t3); }
+
+.btn {
+  padding: 4px 10px;
+  font-family: 'Azeret Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--t1);
   background: none;
   border: 1px solid var(--wire2);
   border-radius: 4px;
-  padding: 5px 12px;
-  font-family: 'Azeret Mono', monospace;
-  font-size: 10px;
-  color: var(--t1);
   cursor: pointer;
-  transition: all 0.2s;
+  white-space: nowrap;
+  transition: all 0.15s;
 }
 
-.acquireBtn:disabled {
-  cursor: not-allowed;
-  color: var(--t3);
-  border-color: var(--wire);
-}
-
-.rarity_legendary .acquireBtn {
-  border-color: rgba(217, 123, 58, 0.3);
-  color: var(--S);
-}
-
-.rarity_legendary .acquireBtn:hover:not(:disabled) {
-  background: var(--Sg);
-  border-color: var(--S);
-}
-
-.rarity_rare .acquireBtn:hover:not(:disabled) {
-  background: var(--Rg);
-  color: var(--R);
-  border-color: rgba(155, 110, 232, 0.4);
-}
-
-.acquireBtn:hover:not(:disabled) {
+.btn:hover:not(:disabled) {
   color: var(--t0);
-  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--S);
+  background: var(--Sx);
 }
+
+.btn:disabled { cursor: not-allowed; color: var(--t3); border-color: var(--wire); }

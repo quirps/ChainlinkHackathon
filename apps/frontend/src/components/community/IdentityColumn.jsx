@@ -1,9 +1,6 @@
 import { StreamerIdentity } from './StreamerIdentity'
 import { SupportStrip } from './SupportStrip'
-import { TierDisplay } from './TierDisplay'
-import { XPBar } from './XPBar'
-import { ManaSession } from './ManaSession'
-import { AchievementsBar } from './AchievementsBar'
+import { Leaderboard } from './Leaderboard'
 import { useStreamerStore } from '../../stores/useStreamerStore'
 import styles from './IdentityColumn.module.css'
 
@@ -15,16 +12,14 @@ export function IdentityColumn() {
       <div className={styles.amb} style={{ '--brand': brandColor }} />
 
       <StreamerIdentity />
-
       <StatusMessage />
-
       <SupportStrip />
-      <div className={styles.divider} />
-      <TierDisplay />
-      <XPBar />
-      <div className={styles.divider} />
-      <ManaSession />
-      <AchievementsBar />
+
+      <div className={styles.spacer} />
+
+      <div className={styles.bottomSection}>
+        <Leaderboard />
+      </div>
     </aside>
   )
 }

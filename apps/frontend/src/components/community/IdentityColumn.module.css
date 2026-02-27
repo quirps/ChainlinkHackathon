@@ -29,14 +29,11 @@
   z-index: 0;
 }
 
-.col > * {
-  position: relative;
-  z-index: 1;
-}
+.col > * { position: relative; z-index: 1; }
 
 .status {
-  margin: 0 28px 4px;
-  padding: 8px 12px;
+  margin: 0 20px 4px;
+  padding: 7px 11px;
   background: var(--ink2);
   border: 1px solid var(--wire);
   border-radius: 5px;
@@ -46,8 +43,12 @@
   font-style: italic;
 }
 
-.divider {
-  height: 1px;
-  background: var(--wire);
-  margin: 8px 0;
+/* Pushes leaderboard to the bottom */
+.spacer {
+  flex: 1;
+}
+
+.bottomSection {
+  border-top: 1px solid var(--wire);
+  flex-shrink: 0;
 }

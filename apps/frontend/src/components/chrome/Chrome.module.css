@@ -89,7 +89,39 @@
 .credsPill:hover {
   border-color: var(--S);
 }
+.userPill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(145, 71, 255, 0.1);
+  border: 1px solid rgba(145, 71, 255, 0.25);
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: rgba(190, 160, 255, 0.9);
+}
 
+.userPill:hover {
+  background: rgba(145, 71, 255, 0.18);
+  border-color: rgba(145, 71, 255, 0.45);
+}
+
+.userName {
+  font-family: 'Azeret Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.twitchIcon {
+  width: 12px;
+  height: 13px;
+  flex-shrink: 0;
+}
 .credsAdd {
   font-size: 9px;
   color: var(--S);

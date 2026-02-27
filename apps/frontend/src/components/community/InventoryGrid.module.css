@@ -1,10 +1,72 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.tabRow {
+  display: flex;
+  gap: 4px;
+  padding: 10px 16px 8px;
+  border-bottom: 1px solid var(--wire);
+  flex-shrink: 0;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-family: 'Azeret Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--t3);
+  border: 1px solid var(--wire);
+  background: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tab:hover { color: var(--t1); border-color: var(--wire2); }
+
+.tabOn {
+  color: var(--S);
+  border-color: rgba(217,123,58,0.35);
+  background: var(--Sx);
+}
+
+.tabBadge {
+  background: var(--M1);
+  color: var(--ink);
+  font-size: 8px;
+  padding: 0 4px;
+  border-radius: 8px;
+  font-family: 'Anybody', sans-serif;
+  font-weight: 700;
+}
+
+.tabEmpty {
+  padding: 32px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--t3);
+  font-style: italic;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  padding: 16px;
+  padding: 14px 16px;
+  overflow-y: auto;
 }
 
+.grid::-webkit-scrollbar { width: 2px; }
+.grid::-webkit-scrollbar-thumb { background: var(--t3); }
+
+/* ── Empty state ─────────────────────────────────────────── */
 .empty {
   padding: 48px 24px;
   text-align: center;
@@ -14,30 +76,28 @@
   gap: 12px;
 }
 
-.emptyGlyph {
-  font-size: 24px;
-  color: var(--t3);
-}
+.emptyGlyph { font-size: 22px; color: var(--t3); }
 
 .empty p {
   font-size: 10px;
   color: var(--t3);
   line-height: 1.6;
-  max-width: 220px;
+  max-width: 200px;
 }
 
+/* ── Slot ─────────────────────────────────────────────────── */
 .slot {
   background: var(--ink2);
   border: 1px solid var(--wire);
   border-radius: 7px;
-  padding: 12px 10px;
+  padding: 10px 8px 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
   position: relative;
 }
 
@@ -46,40 +106,74 @@
   background: var(--ink3);
 }
 
-.rarity_legendary { border-color: rgba(217, 123, 58, 0.18); }
-.rarity_legendary:hover { border-color: rgba(217, 123, 58, 0.4); }
-.rarity_rare      { border-color: rgba(155, 110, 232, 0.15); }
-.rarity_epic      { border-color: rgba(155, 110, 232, 0.15); }
+.rarity_legendary { border-color: rgba(217,123,58,0.2); }
+.rarity_legendary:hover { border-color: rgba(217,123,58,0.45); }
+.rarity_rare,
+.rarity_epic { border-color: rgba(155,110,232,0.15); }
+.rarity_rare:hover,
+.rarity_epic:hover { border-color: rgba(155,110,232,0.4); }
 
-.consumed {
-  filter: saturate(0.2) brightness(0.5);
-}
+.consumed { filter: saturate(0.18) brightness(0.5); }
 
-.listed {
-  box-shadow: 0 0 0 1px rgba(58, 171, 245, 0.25);
+/* Blue glow outline when listed on market */
+.listed { box-shadow: 0 0 0 1px rgba(58,171,245,0.3); border-color: rgba(58,171,245,0.2); }
+
+.slotTop {
+  position: relative;
+  display: inline-flex;
 }
 
 .glyph {
-  font-size: 26px;
+  font-size: 24px;
   line-height: 1;
-  margin-bottom: 2px;
 }
 
-.name {
+.qty {
+  position: absolute;
+  bottom: -2px;
+  right: -6px;
+  font-family: 'Anybody', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--t2);
+  background: var(--ink);
+  border: 1px solid var(--wire2);
+  border-radius: 3px;
+  padding: 0 3px;
+}
+
+.slotName {
   font-family: 'Instrument Serif', serif;
-  font-size: 11px;
+  font-size: 10px;
   font-style: italic;
   color: var(--t1);
   line-height: 1.2;
 }
 
-.seller {
+/* Seller row — shows who listed this item */
+.sellerRow {
+  display: flex;
+  align-items: center;
+  gap: 3px;
   font-size: 8px;
   color: var(--M1);
 }
 
-.gain {
+.sellerIcon {
   font-size: 9px;
+  opacity: 0.7;
+}
+
+.sellerName {
+  font-weight: 500;
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gain {
+  font-size: 8px;
   color: var(--X);
   font-family: 'Anybody', sans-serif;
   font-weight: 700;
@@ -90,35 +184,17 @@
   gap: 3px;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
-.badgeListed {
+.badge {
   font-size: 7px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--M1);
-  background: var(--Mg);
   border-radius: 2px;
   padding: 1px 4px;
 }
 
-.badgeActive {
-  font-size: 7px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--X);
-  background: var(--Xg);
-  border-radius: 2px;
-  padding: 1px 4px;
-}
-
-.badgeUsed {
-  font-size: 7px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--t3);
-  border: 1px solid var(--wire);
-  border-radius: 2px;
-  padding: 1px 4px;
-}
+.badgeListed { color: var(--M1); background: var(--Mg); }
+.badgeActive { color: var(--X);  background: var(--Xg); }
+.badgeUsed   { color: var(--t3); border: 1px solid var(--wire); }

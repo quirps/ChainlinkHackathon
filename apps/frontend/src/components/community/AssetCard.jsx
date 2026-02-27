@@ -11,54 +11,55 @@ export function AssetCard({ asset, onPurchase }) {
     : asset.priceType === 'credits' ? `$${(asset.priceCreditsCents / 100).toFixed(2)}`
     : '—'
 
-  const priceUnit =
-    asset.priceType === 'mana' ? 'Mana' : asset.priceType === 'credits' ? 'USD' : ''
+  const priceUnit = asset.priceType === 'mana' ? 'Mana' : asset.priceType === 'credits' ? 'USD' : ''
 
   return (
     <article className={clsx(styles.card, styles[`rarity_${asset.rarity}`], isLocked && styles.locked)}>
-      <div className={styles.vis}>
+      {/* Compact horizontal layout: emoji | info | price+btn */}
+      <div className={styles.inner}>
+
         <span className={styles.glyph}>{asset.emoji}</span>
-        <span className={clsx(styles.rarityMark, styles[`rarity_${asset.rarity}`])}>
-          {asset.rarity}
-        </span>
-      </div>
 
-      <div className={styles.body}>
-        {asset.sellerDisplayName && (
-          <div className={styles.sellerBadge}>
-            Listed by <span className={styles.sellerName}>{asset.sellerDisplayName}</span>
+        <div className={styles.mid}>
+          <div className={styles.topRow}>
+            <span className={styles.name}>{asset.name}</span>
+            <span className={clsx(styles.rarityDot, styles[`dot_${asset.rarity}`])} title={asset.rarity} />
           </div>
-        )}
-        <div className={styles.name}>{asset.name}</div>
-        <div className={styles.desc}>{asset.description}</div>
-        {asset.xpOnPurchase > 0 && (
-          <div className={styles.xpPill}>+{asset.xpOnPurchase} XP</div>
-        )}
+          {asset.sellerDisplayName ? (
+            <div className={styles.seller}>
+              Listed by <span className={styles.sellerName}>{asset.sellerDisplayName}</span>
+            </div>
+          ) : (
+            <div className={styles.desc}>{asset.description}</div>
+          )}
+          {asset.xpOnPurchase > 0 && (
+            <span className={styles.xpPill}>+{asset.xpOnPurchase} XP</span>
+          )}
+        </div>
 
-        <div className={styles.foot}>
-          <div>
-            {isLocked ? (
-              <>
-                <div className={styles.priceNum}>🔒 Lvl {asset.levelRequired}</div>
-                <div className={styles.priceUnit}>required</div>
-              </>
-            ) : (
-              <>
-                <div className={clsx(styles.priceNum, asset.priceType === 'mana' && styles.priceNumMana)}>
-                  {priceDisplay}
-                </div>
-                <div className={styles.priceUnit}>{priceUnit}</div>
-              </>
-            )}
-          </div>
+        <div className={styles.right}>
+          {isLocked ? (
+            <div className={styles.lockInfo}>
+              <span className={styles.lockIcon}>🔒</span>
+              <span className={styles.lockLevel}>Lv {asset.levelRequired}</span>
+            </div>
+          ) : (
+            <div className={styles.priceCol}>
+              <span className={clsx(styles.price, asset.priceType === 'mana' && styles.priceMana)}>
+                {priceDisplay}
+              </span>
+              <span className={styles.priceUnit}>{priceUnit}</span>
+            </div>
+          )}
           <button
-            className={styles.acquireBtn}
+            className={styles.btn}
             disabled={isLocked}
             onClick={() => !isLocked && onPurchase(asset)}
           >
-            {isLocked ? 'Locked' : 'Acquire'}
+            {isLocked ? 'Locked' : 'Get'}
           </button>
         </div>
+
       </div>
     </article>
   )

@@ -11,3 +11,42 @@
   background: rgba(7, 8, 12, 0.5);
   padding-top: var(--chrome-h);
 }
+
+.topSection {
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--wire);
+  overflow-y: auto;
+  max-height: 55%;
+}
+
+.topSection::-webkit-scrollbar { width: 2px; }
+.topSection::-webkit-scrollbar-thumb { background: var(--t3); }
+
+.divider {
+  height: 1px;
+  background: var(--wire);
+  margin: 4px 0;
+}
+
+.guestPrompt {
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--wire);
+}
+
+.guestIcon {
+  font-size: 20px;
+  color: var(--t3);
+}
+
+.guestText {
+  font-size: 9px;
+  color: var(--t3);
+  text-align: center;
+  line-height: 1.5;
+  max-width: 140px;
+  font-style: italic;
+}
