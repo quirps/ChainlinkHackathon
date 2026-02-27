@@ -8,10 +8,8 @@ mod config;
 use config::Config;
 
 //temporary insertions to get this running
-mod db {
-    pub mod users;
-}
 
+mod db; // Now top-level: This loads src/db/mod.rs, which has pub mod users;
 mod middleware {
     pub mod auth;
 }

@@ -13,7 +13,7 @@ use std::env;
 use uuid::Uuid;
 use crate::middleware::auth::Claims; // We'll define this in middleware/auth.rs
 
-use super::super::db::users; // Assume we'll have db/users.rs with upsert_user_from_twitch etc.
+use crate::db::users::{upsert_user_from_twitch, User}; // Direct import of function and struct
 
 #[derive(Deserialize)]
 pub struct TwitchCallbackParams {
@@ -100,7 +100,8 @@ pub async fn twitch_callback(
     let twitch_user = user_data.data.first().ok_or(StatusCode::NOT_FOUND)?;
 
     // Upsert user (using db/users.rs function)
-    let user = users::upsert_user_from_twitch(
+    
+    let user = upsert_user_from_twitch(
         &pool,
         &twitch_user.id,
         &twitch_user.login,
